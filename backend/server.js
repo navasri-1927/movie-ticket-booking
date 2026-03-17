@@ -4,7 +4,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer"; // ✅ ADDED
+import nodemailer from "nodemailer";
 
 // Load environment variables FIRST
 dotenv.config();
@@ -12,19 +12,19 @@ dotenv.config();
 // ===============================
 // DATABASE CONNECTION
 // ===============================
-import connectDB from "./config/db.js"; // updated to import ESM db.js
+import connectDB from "./config/db.js";
 
 // ===============================
 // ROUTES
 // ===============================
 import authRoutes from "./routes/authRoutes.js";
-import movieRoutes from "./routes/movieRoutes.js"; // ✅ ADD THIS
-import reviewRoutes from "./routes/reviewRoutes.js"; // added for middleware
+import movieRoutes from "./routes/movieRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 // ===============================
 // INITIAL SETUP
 // ===============================
-connectDB();
+connectDB(); // Connect to MongoDB
 
 const app = express();
 
@@ -39,17 +39,17 @@ app.use("/api/reviews", reviewRoutes);
 // ===============================
 // API ROUTES
 // ===============================
-
-// Authentication
 app.use("/api/auth", authRoutes);
-
-// Movies API
-app.use("/api/movies", movieRoutes); // ✅ ADD THIS
+app.use("/api/movies", movieRoutes);
 
 // ===============================
 // EMAIL TEST ROUTE
 // ===============================
 app.get("/test-email", async (req, res) => {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        return res.status(500).send("❌ EMAIL_USER or EMAIL_PASS not set in environment variables");
+    }
+
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -68,8 +68,8 @@ app.get("/test-email", async (req, res) => {
 
         res.send("✅ Email sent successfully!");
     } catch (error) {
-        console.log(error);
-        res.send("❌ Email failed");
+        console.error(error);
+        res.status(500).send("❌ Email failed");
     }
 });
 
