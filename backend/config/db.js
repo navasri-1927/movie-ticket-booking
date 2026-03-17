@@ -1,20 +1,13 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
-    const mongoURI = process.env.MONGO_URI;
-
-    if (!mongoURI) {
-        console.error("❌ MONGO_URI is undefined! Set it in Vercel environment variables.");
-        process.exit(1);
-    }
-
     try {
-        await mongoose.connect(mongoURI);
-        console.log("✅ MongoDB Connected");
-    } catch (err) {
-        console.error("❌ MongoDB connection error:", err.message);
+        const conn = await mongoose.connect(process.env.MONGO_URI);
+        console.log(`MongoDB Connected`);
+    } catch (error) {
+        console.error(error);
         process.exit(1);
     }
 };
 
-export default connectDB;
+module.exports = connectDB;
