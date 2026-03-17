@@ -1,13 +1,26 @@
-const mongoose = require("mongoose");
+// backend/config/db.js
+import mongoose from "mongoose"; // ESM import
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI);
-        console.log(`MongoDB Connected`);
+        // Check if MONGO_URI exists
+        if (!process.env.MONGO_URI) {
+            throw new Error(
+                "MONGO_URI is not defined! Please set it in your Vercel Environment Variables."
+            );
+        }
+
+        // Connect to MongoDB
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-        console.error(error);
-        process.exit(1);
+        console.error("MongoDB connection error:", error);
+        process.exit(1); // stop the server if DB connection fails
     }
 };
 
-module.exports = connectDB;
+export default connectDB;

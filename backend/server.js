@@ -1,10 +1,10 @@
 // ===============================
 // IMPORTS
 // ===============================
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const nodemailer = require("nodemailer"); // ✅ ADDED
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import nodemailer from "nodemailer"; // ✅ ADDED
 
 // Load environment variables FIRST
 dotenv.config();
@@ -12,13 +12,14 @@ dotenv.config();
 // ===============================
 // DATABASE CONNECTION
 // ===============================
-const connectDB = require("./config/db");
+import connectDB from "./config/db.js"; // updated to import ESM db.js
 
 // ===============================
 // ROUTES
 // ===============================
-const authRoutes = require("./routes/authRoutes");
-const movieRoutes = require("./routes/movieRoutes"); // ✅ ADD THIS
+import authRoutes from "./routes/authRoutes.js";
+import movieRoutes from "./routes/movieRoutes.js"; // ✅ ADD THIS
+import reviewRoutes from "./routes/reviewRoutes.js"; // added for middleware
 
 // ===============================
 // INITIAL SETUP
@@ -33,7 +34,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/reviews", require("./routes/reviewRoutes"));
+app.use("/api/reviews", reviewRoutes);
 
 // ===============================
 // API ROUTES
@@ -50,7 +51,6 @@ app.use("/api/movies", movieRoutes); // ✅ ADD THIS
 // ===============================
 app.get("/test-email", async (req, res) => {
     try {
-
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -67,7 +67,6 @@ app.get("/test-email", async (req, res) => {
         });
 
         res.send("✅ Email sent successfully!");
-
     } catch (error) {
         console.log(error);
         res.send("❌ Email failed");
