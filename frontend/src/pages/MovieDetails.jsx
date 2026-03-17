@@ -40,7 +40,7 @@ function MovieDetails() {
 
     const fetchReviews = async () => {
         try {
-            const res = await axios.get(`https://movie-ticket-booking-ited.onrender.com/api/reviews/${id}`);
+            const res = await axios.get(`https://api-movieticketbooking.onrender.com/api/reviews/${id}`);
             setReviews(res.data);
         } catch (err) {
             console.log(err);
@@ -54,7 +54,7 @@ function MovieDetails() {
             return;
         }
 
-        await axios.post("https://movie-ticket-booking-ited.onrender.com/api/reviews", {
+        await axios.post("https://api-movieticketbooking.onrender.com/api/reviews", {
             movieId: id,
             user: "User",
             rating,

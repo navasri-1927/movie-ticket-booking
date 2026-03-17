@@ -8,7 +8,7 @@ function ReviewForm({ movieId }) {
 
     const submitReview = async () => {
 
-        await axios.post("https://movie-ticket-booking-ited.onrender.com/api/reviews", {
+        await axios.post("https://api-movieticketbooking.onrender.com/api/reviews", {
             movieId,
             rating,
             comment

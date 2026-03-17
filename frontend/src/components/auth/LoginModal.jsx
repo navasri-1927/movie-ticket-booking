@@ -24,8 +24,8 @@ const LoginModal = ({ closeModal }) => {
         try {
 
             const url = isLogin
-                ? "https://movie-ticket-booking-ited.onrender.com/api/auth/login"
-                : "https://movie-ticket-booking-ited.onrender.com/api/auth/register";
+                ? "https://api-movieticketbooking.onrender.com/api/auth/login"
+                : "https://api-movieticketbooking.onrender.com/api/auth/register";
 
             const res = await axios.post(url, formData);
 
