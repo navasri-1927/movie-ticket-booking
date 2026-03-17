@@ -1,10 +1,10 @@
 // ===============================
 // IMPORTS
 // ===============================
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const nodemailer = require("nodemailer"); // ✅ ADDED
 
 // Load environment variables FIRST
 dotenv.config();
@@ -12,19 +12,18 @@ dotenv.config();
 // ===============================
 // DATABASE CONNECTION
 // ===============================
-import connectDB from "./config/db.js";
+const connectDB = require("./config/db");
 
 // ===============================
 // ROUTES
 // ===============================
-import authRoutes from "./routes/authRoutes.js";
-import movieRoutes from "./routes/movieRoutes.js";
-import reviewRoutes from "./routes/reviewRoutes.js";
+const authRoutes = require("./routes/authRoutes");
+const movieRoutes = require("./routes/movieRoutes"); // ✅ ADD THIS
 
 // ===============================
 // INITIAL SETUP
 // ===============================
-connectDB(); // Connect to MongoDB
+connectDB();
 
 const app = express();
 
@@ -34,23 +33,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/reviews", require("./routes/reviewRoutes"));
 
 // ===============================
 // API ROUTES
 // ===============================
+
+// Authentication
 app.use("/api/auth", authRoutes);
-app.use("/api/movies", movieRoutes);
+
+// Movies API
+app.use("/api/movies", movieRoutes); // ✅ ADD THIS
 
 // ===============================
 // EMAIL TEST ROUTE
 // ===============================
 app.get("/test-email", async (req, res) => {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        return res.status(500).send("❌ EMAIL_USER or EMAIL_PASS not set in environment variables");
-    }
-
     try {
+
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -67,9 +67,10 @@ app.get("/test-email", async (req, res) => {
         });
 
         res.send("✅ Email sent successfully!");
+
     } catch (error) {
-        console.error(error);
-        res.status(500).send("❌ Email failed");
+        console.log(error);
+        res.send("❌ Email failed");
     }
 });
 
